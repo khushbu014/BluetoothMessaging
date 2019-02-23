@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO changes2
     private List<ChatMessage> chatMessages;
-    private boolean isMine = true;
+    private boolean isMine;
     private ArrayAdapter<ChatMessage> adapter;
 
     BluetoothAdapter bluetoothAdapter;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         messageBox = findViewById(R.id.message);
         device_name = findViewById(R.id.device_name);
         listView = findViewById(R.id.listview_devices);
-        listMsg = findViewById(R.id.listview_devices);
+        listMsg = findViewById(R.id.listview_msgs);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -108,6 +108,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String sendText = String.valueOf(status.getText());
+                isMine=true;
+                ChatMessage chatMessage = new ChatMessage(sendText, isMine);
+                chatMessages.add(chatMessage);
+                adapter.notifyDataSetChanged();
                 try {
                     sendRecieve.write(sendText.getBytes());
                 } catch (IOException e) {
@@ -173,21 +177,13 @@ public class MainActivity extends AppCompatActivity {
                     byte[] readBuffer = (byte[]) message.obj;
 
                     String tempString = new String(readBuffer,0,message.arg1);
-                    messageBox.setText(tempString);
-
 
                     //TODO changes
-
+                    isMine=false;
                     ChatMessage chatMessage = new ChatMessage(tempString, isMine);
                     chatMessages.add(chatMessage);
                     adapter.notifyDataSetChanged();
-                    if (isMine) {
-                        isMine = false;
-                    } else {
-                        isMine = true;
-                    }
-
-//                    status.setText("msg received");
+                    Log.e("ATG mine",isMine+"");
                     break;
             }
             return true;

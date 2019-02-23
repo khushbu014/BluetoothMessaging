@@ -30,9 +30,9 @@ public class chatAdapter extends ArrayAdapter<ChatMessage> {
         int viewType = getItemViewType(position);
 
         if (chatMessage.isMine()) {
-            layoutResource = R.layout.chat_left;
-        } else {
             layoutResource = R.layout.chat_right;
+        } else {
+            layoutResource = R.layout.chat_left;
         }
 
         if (convertView != null) {
