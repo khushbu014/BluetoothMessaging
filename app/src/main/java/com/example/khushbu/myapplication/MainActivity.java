@@ -4,13 +4,20 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.icu.util.Output;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,13 +34,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerView.OnItemTouchListener {
 
     private Button listen, listDevices, send;
     private EditText status;
-    private TextView messageBox, device_name;
-    ListView listView,listMsg;
+    private TextView device_name;
+    private ListView listView,listMsg;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapterDevice;
 
+    private Toolbar toolbar;
 
     //TODO changes2
     private List<ChatMessage> chatMessages;
@@ -65,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
         listDevices = findViewById(R.id.listDevices);
         send = findViewById(R.id.send);
         status = findViewById(R.id.status);
-        messageBox = findViewById(R.id.message);
         device_name = findViewById(R.id.device_name);
-        listView = findViewById(R.id.listview_devices);
+        recyclerView = findViewById(R.id.review_devices);
+//        toolbar= findViewById(R.id.home_toolbar);
+//        toolbar.setTitle("Chat Mate");
+
         listMsg = findViewById(R.id.listview_msgs);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -90,19 +102,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        recyclerView.addOnItemTouchListener(    new MainActivity(this, new MainActivity.OnItemClickListener() {
+            @Override public void onItemClick(View view, int position) {
+
                 try {
-                    ClientClass clientClass = new ClientClass(btarray[i]);
+                    ClientClass clientClass = new ClientClass(btarray[position]);
                     clientClass.start();
                     device_name.setText("CONNECTING");
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                Log.e("TAG","hello");
             }
-        });
+        }));
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,15 +133,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         //TODO CHANGES
-
         chatMessages = new ArrayList<>();
 
         //set ListView adapter first
         adapter = new chatAdapter(this, R.layout.chat_left, chatMessages);
         listMsg.setAdapter(adapter);
+
+
 
     }
 
@@ -149,9 +161,10 @@ public class MainActivity extends AppCompatActivity {
                         index++;
                     }
 
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
-                    listView.setAdapter(arrayAdapter);
-                }
+                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                    adapterDevice = new Chat(strings,getApplicationContext());
+                    recyclerView.setAdapter(adapterDevice);
+                    }
             }
         });
     }
@@ -161,16 +174,20 @@ public class MainActivity extends AppCompatActivity {
         public boolean handleMessage(Message message) {
             switch (message.what) {
                 case STATE_LISTENING:
+                    device_name.setBackgroundColor(Color.BLUE);
                     device_name.setText("Listening");
                     break;
                 case STATE_CONNECTING:
+                    device_name.setBackgroundColor(Color.BLUE);
                     device_name.setText("Connecting");
                     break;
                 case STATE_CONNECTED:
+                    device_name.setBackgroundColor(Color.GREEN);
                     device_name.setText("Connected");
                     break;
                 case STATE_CONNECTION_FAILED:
                     device_name.setText("Connecton failed");
+                    device_name.setBackgroundColor(Color.RED);
                     break;
                 case STATE_MESSaGE_RECIEVED:
 
@@ -299,4 +316,48 @@ public class MainActivity extends AppCompatActivity {
             outputStream.write(bytes);
         }
     }
+
+
+    //for recycler view
+
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int position);
+    }
+
+    public MainActivity() {
+        // No args constructor
+    }
+
+    GestureDetector mGestureDetector;
+
+    public MainActivity(Context context, OnItemClickListener listener) {
+        mListener = listener;
+        mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+        View childView = view.findChildViewUnder(e.getX(), e.getY());
+        if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
+            mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
+        }
+        return false;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+    }
+
 }

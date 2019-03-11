@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context=".SplashScreen">
+
+    <TextView
+        android:id="@+id/Heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ChatMate"
+        android:textSize="40dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="5dp"
+        android:fontFamily="sans-serif-condensed-light"
+        android:textColor="#FFFFFF"
+        android:textStyle=""
+
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Heading"
+        android:src="@drawable/msg"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>

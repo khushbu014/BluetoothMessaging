@@ -1,25 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/home_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/gradient"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chat Mate"
+            android:textColor="#FFFF"
+            android:textSize="25sp"
+            android:fontFamily="sans-serif-smallcaps"
+            android:layout_gravity="center"
+            android:id="@+id/toolbar_title" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        android:hint="Connection Status"
+        android:id="@+id/device_name"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:background="#e5ffff"
+        app:cardElevation="5dp"
+        android:layout_margin="5dp"
+        >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#eceff1"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="13dp"
         >
 
     <Button
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="20dp"
         android:layout_height="wrap_content"
         android:text="Listen"
+        android:textColor="#ffff"
+        android:background="@color/bluebutton"
         android:id="@+id/listen"
         />
 
@@ -27,65 +76,70 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:text="List devices"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="40dp"
+        android:textColor="#ffff"
+        android:background="@color/bluebutton"
         android:id="@+id/listDevices"
         android:layout_height="wrap_content">
-
     </Button>
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:hint="device name"
-        android:id="@+id/device_name"
-        />
-
+    </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:id="@+id/review_devices"
+            />
     </LinearLayout>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_margin="20dp"
-        android:id="@+id/listview_devices"
-    />
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:id="@+id/listview_msgs"
         />
 
-
-    <TextView
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
-        android:hint="message"
-        android:id="@+id/message"
-        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:orientation="horizontal"
+        android:layout_margin="5dp"
         android:layout_marginTop="10dp"
         >
 
         <EditText
             android:id="@+id/status"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="status" />
+            android:layout_height="45dp"
+            android:layout_weight="5"
+            android:hint="Type your message"
+            android:elevation="5dp"
+            android:background="@drawable/sendtext"
+            />
 
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:layout_margin="3dp"
             android:layout_height="wrap_content"
+            android:textColor="#ffff"
             android:text="send"
+            android:background="@drawable/sendbutton"
             android:id="@+id/send"
             />
 
+    </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
